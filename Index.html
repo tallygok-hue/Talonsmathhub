@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Algebra II Study Guide - Talon's Math Hub</title>
+    <style>
+        body { font-family: 'Times New Roman', serif; background-color: #f4f4f4; color: #333; line-height: 1.6; padding: 20px; }
+        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+        h1 { border-bottom: 2px solid #2c3e50; color: #2c3e50; }
+        .math-box { background: #eef; padding: 15px; border-left: 5px solid #2c3e50; margin: 20px 0; }
+        code { font-weight: bold; color: #d35400; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Unit 4: Quadratic Functions & Equations</h1>
+    <p>Welcome to the <strong>Talon's Math Hub</strong> repository. This page contains practice problems and formulas for the upcoming mid-term exam.</p>
+
+    <div class="math-box">
+        <h3>The Quadratic Formula</h3>
+        <p>To solve for <em>x</em> in the equation <code>ax² + bx + c = 0</code>, use:</p>
+        <code>x = [-b ± sqrt(b² - 4ac)] / 2a</code>
+    </div>
+
+    <h3>Practice Problems</h3>
+    <ul>
+        <li>Solve for x: x² - 5x + 6 = 0</li>
+        <li>Find the vertex of the parabola: y = 2(x-3)² + 4</li>
+        <li>Simplify the radical: sqrt(72)</li>
+    </ul>
+</div>
+
+<script>
+    // THE SECRET ENTRANCE
+    let keysPressed = "";
+    const secretCode = "1337"; // TYPE THIS TO UNLOCK
+
+    document.addEventListener('keydown', (e) => {
+        keysPressed += e.key;
+        
+        // Keep the string short so it doesn't eat up memory
+        if (keysPressed.length > 10) {
+            keysPressed = keysPressed.substring(keysPressed.length - 4);
+        }
+
+        if (keysPressed.includes(secretCode)) {
+            // This is where it sends you to your game folder
+            // We will create this 'games' folder in the next step
+            window.location.href = "./games/index.html"; 
+        }
+    });
+</script>
+
+</body>
+</html>
