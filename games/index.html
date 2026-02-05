@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Archive | Internal</title>
+    <style>
+        :root { --accent: #10b981; --bg: #020617; --card: #1e293b; }
+        body { font-family: sans-serif; background-color: var(--bg); color: white; margin: 0; padding: 20px; }
+        
+        /* The Panic Button - Top Right */
+        .panic-btn {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 1000;
+        }
+
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 60px; }
+        .game-card { background: var(--card); border-radius: 10px; overflow: hidden; text-align: center; padding: 15px; border: 1px solid #334155; }
+        .game-card:hover { border-color: var(--accent); }
+        .play-btn { background: var(--accent); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; margin-top: 10px; width: 100%; }
+    </style>
+</head>
+<body>
+
+    <button class="panic-btn" onclick="goHome()">PANIC (ESC)</button>
+
+    <h1>The Vault</h1>
+    <p>Logged in as: <code>Guest_Student_01</code></p>
+
+    <div class="game-grid">
+        <div class="game-card">
+            <h3>Friday Night Funkin'</h3>
+            <p>Full Web Port</p>
+            <button class="play-btn" onclick="alert('Game loading logic goes here!')">Play Now</button>
+        </div>
+        
+        </div>
+
+    <script>
+        function goHome() {
+            window.location.href = "../index.html";
+        }
+
+        // Emergency "Panic" shortcut: Press Escape key to hide the games
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape") goHome();
+        });
+    </script>
+</body>
+</html>
