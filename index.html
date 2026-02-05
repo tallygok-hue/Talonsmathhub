@@ -51,14 +51,20 @@
     </div>
 
     <script>
-        // THE SECRET ENTRANCE - Still 1337
         let sequence = "";
+        let timer;
+
         document.addEventListener('keydown', (e) => {
+            clearTimeout(timer);
             sequence += e.key;
-            if (sequence.length > 10) sequence = sequence.slice(-4);
-            if (sequence === "1337") {
-                window.location.href = "./games/index.html";
+            
+            // If they type '1337', give them the 'key' and move them to the vault
+            if (sequence.includes("1337")) {
+                sessionStorage.setItem('vaultAccess', 'true');
+                window.location.href = "./games/index.html"; 
             }
+
+            timer = setTimeout(() => { sequence = ""; }, 2000);
         });
     </script>
 </body>
