@@ -3,55 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Algebra II Study Guide - Talon's Math Hub</title>
+    <title>Student Portal | Advanced Mathematics Hub</title>
     <style>
-        body { font-family: 'Times New Roman', serif; background-color: #f4f4f4; color: #333; line-height: 1.6; padding: 20px; }
-        .container { max-width: 800px; margin: auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        h1 { border-bottom: 2px solid #2c3e50; color: #2c3e50; }
-        .math-box { background: #eef; padding: 15px; border-left: 5px solid #2c3e50; margin: 20px 0; }
-        code { font-weight: bold; color: #d35400; }
+        :root { --primary: #3b82f6; --bg: #0f172a; --card: #1e293b; --text: #f8fafc; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: auto; }
+        header { border-bottom: 1px solid #334155; padding-bottom: 20px; margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .card { background: var(--card); padding: 20px; border-radius: 12px; border: 1px solid #334155; transition: 0.3s; cursor: pointer; }
+        .card:hover { border-color: var(--primary); transform: translateY(-5px); }
+        .card h3 { color: var(--primary); margin-top: 0; }
+        .stats { display: flex; gap: 20px; margin-bottom: 30px; }
+        .stat-item { background: #1e293b; padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; border: 1px solid #334155; }
+        code { color: #60a5fa; background: #000; padding: 2px 5px; border-radius: 4px; }
     </style>
 </head>
 <body>
+    <div class="container">
+        <header>
+            <h1>Talon's Math Hub <span style="font-size: 1rem; color: #94a3b8; font-weight: normal;">v4.2.0</span></h1>
+            <div class="stat-item">User: Guest_Student_01</div>
+        </header>
 
-<div class="container">
-    <h1>Unit 4: Quadratic Functions & Equations</h1>
-    <p>Welcome to the <strong>Talon's Math Hub</strong> repository. This page contains practice problems and formulas for the upcoming mid-term exam.</p>
+        <div class="stats">
+            <div class="stat-item">Current Progress: 64%</div>
+            <div class="stat-item">Next Exam: Feb 12</div>
+            <div class="stat-item">Rank: Gold Tier</div>
+        </div>
 
-    <div class="math-box">
-        <h3>The Quadratic Formula</h3>
-        <p>To solve for <em>x</em> in the equation <code>ax² + bx + c = 0</code>, use:</p>
-        <code>x = [-b ± sqrt(b² - 4ac)] / 2a</code>
+        <div class="grid">
+            <div class="card">
+                <h3>Calculus II: Integrals</h3>
+                <p>Advanced integration techniques including partial fractions and substitution.</p>
+                <code>∫ x² dx = ⅓x³ + C</code>
+            </div>
+            <div class="card">
+                <h3>Trigonometry Hub</h3>
+                <p>Master the unit circle and complex identities.</p>
+                <code>sin²θ + cos²θ = 1</code>
+            </div>
+            <div class="card">
+                <h3>Linear Algebra</h3>
+                <p>Matrix operations and vector spaces for engineering applications.</p>
+                <code>Ax = b</code>
+            </div>
+        </div>
     </div>
 
-    <h3>Practice Problems</h3>
-    <ul>
-        <li>Solve for x: x² - 5x + 6 = 0</li>
-        <li>Find the vertex of the parabola: y = 2(x-3)² + 4</li>
-        <li>Simplify the radical: sqrt(72)</li>
-    </ul>
-</div>
-
-<script>
-    // THE SECRET ENTRANCE
-    let keysPressed = "";
-    const secretCode = "1337"; // TYPE THIS TO UNLOCK
-
-    document.addEventListener('keydown', (e) => {
-        keysPressed += e.key;
-        
-        // Keep the string short so it doesn't eat up memory
-        if (keysPressed.length > 10) {
-            keysPressed = keysPressed.substring(keysPressed.length - 4);
-        }
-
-        if (keysPressed.includes(secretCode)) {
-            // This is where it sends you to your game folder
-            // We will create this 'games' folder in the next step
-            window.location.href = "./games/index.html"; 
-        }
-    });
-</script>
-
+    <script>
+        // THE SECRET ENTRANCE - Still 1337
+        let sequence = "";
+        document.addEventListener('keydown', (e) => {
+            sequence += e.key;
+            if (sequence.length > 10) sequence = sequence.slice(-4);
+            if (sequence === "1337") {
+                window.location.href = "./games/index.html";
+            }
+        });
+    </script>
 </body>
 </html>
