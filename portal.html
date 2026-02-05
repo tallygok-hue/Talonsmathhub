@@ -1,0 +1,13 @@
+function checkAccess() {
+    const code = document.getElementById('accessKey').value;
+    const codes = {
+        "MATH77": "vip-games.html",   // Code for Person A
+        "ALGEBRA9": "staff-games.html" // Code for Person B
+    };
+
+    if (codes[code]) {
+        window.location.href = codes[code];
+    } else {
+        alert("Invalid Institutional Access Key.");
+    }
+}
