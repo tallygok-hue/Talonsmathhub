@@ -1,25 +1,92 @@
-<script>
-    function checkAccess() {
-        const code = document.getElementById('accessKey').value;
-        // The keys are still readable, but the destinations are scrambled
-        const codes = {
-            "MATH77": "dmlwLWdhbWVzLmh0bWw=",
-            "ALGEBRA9": "c3RhZmYtZ2FtZXMuaHRtbA=="
-        };
-        if (codes[code]) {
-            window.location.href = atob(codes[code]);
-        } else {
-            alert("Invalid Institutional Access Key.");
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Mathematics Hub | Student Portal</title>
+    <style>
+        :root { --primary: #38bdf8; --bg: #020617; --card: rgba(30, 41, 59, 0.5); --text: #f8fafc; }
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: var(--bg); 
+            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 100%);
+            color: var(--text); 
+            margin: 0; 
+            padding: 40px 20px;
+            min-height: 100vh;
         }
-    }
+        .container { max-width: 1100px; margin: auto; }
+        
+        /* The Bento Grid Layout */
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 20px; 
+        }
+        .card { 
+            background: var(--card); 
+            backdrop-filter: blur(12px); 
+            padding: 30px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.1); 
+            transition: 0.4s ease; 
+        }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        
+        /* Institutional Access Styling */
+        .access-box { text-align: center; margin-bottom: 40px; }
+        input { 
+            padding: 12px; border-radius: 8px; border: 1px solid #334155; 
+            background: #0f172a; color: white; width: 220px; 
+        }
+        button { 
+            padding: 12px 24px; background: var(--primary); border: none; 
+            border-radius: 8px; color: #020617; font-weight: bold; cursor: pointer; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="access-box">
+            <h2>Institutional Access</h2>
+            <input type="password" id="accessKey" placeholder="Enter Access Key">
+            <button onclick="checkAccess()">Validate</button>
+        </div>
 
-    let sequence = "";
-    document.addEventListener('keydown', (e) => {
-        sequence += e.key;
-        if (sequence.length > 4) sequence = sequence.slice(-4);
-        // "1337" still triggers it, but the link is hidden
-        if (sequence === "1337") {
-            window.location.href = atob("aGlkZGVuLXZhdWx0Lmh0bWw=");
+        <div class="grid">
+            <div class="card">
+                <h3>Calculus III</h3>
+                <p>Multivariable integration and vector fields.</p>
+            </div>
+            <div class="card">
+                <h3>Quantum Mechanics</h3>
+                <p>Mathematical foundations of wave functions.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkAccess() {
+            const code = document.getElementById('accessKey').value;
+            const codes = {
+                "MATH77": "dmlwLWdhbWVzLmh0bWw=", 
+                "ALGEBRA9": "c3RhZmYtZ2FtZXMuaHRtbA==" 
+            };
+            if (codes[code]) {
+                window.location.href = atob(codes[code]);
+            } else {
+                alert("Invalid Institutional Access Key.");
+            }
         }
-    });
-</script>
+
+        let sequence = "";
+        document.addEventListener('keydown', (e) => {
+            sequence += e.key;
+            if (sequence.length > 4) sequence = sequence.slice(-4);
+            if (sequence === "1337") {
+                window.location.href = atob("aGlkZGVuLXZhdWx0Lmh0bWw=");
+            }
+        });
+    </script>
+</body>
+</html>
