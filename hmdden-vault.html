@@ -2,58 +2,80 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SECURE NODE: ALPHA</title>
+    <title>SECURE NODE: ALPHA | NEBULA ENGINE</title>
     <style>
-        :root { --bg: #020617; --accent: #38bdf8; --card: #1e293b; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; padding: 30px; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 20px; }
-        .search-bar { background: var(--card); border: 1px solid var(--accent); color: white; padding: 10px; border-radius: 8px; width: 300px; }
+        :root { --bg: #020617; --accent: #38bdf8; --card: #1e293b; --text: #f8fafc; }
+        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; padding: 30px; margin: 0; }
+        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 20px; position: sticky; top: 0; background: var(--bg); z-index: 100; }
+        .search-bar { background: var(--card); border: 1px solid var(--accent); color: white; padding: 12px 20px; border-radius: 12px; width: 400px; font-size: 1rem; }
         
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; margin-top: 30px; }
-        .game-card { background: var(--card); border-radius: 12px; padding: 15px; text-align: center; transition: 0.3s; cursor: pointer; border: 1px solid transparent; }
-        .game-card:hover { border-color: var(--accent); transform: scale(1.05); }
-        .game-card img { width: 100%; border-radius: 8px; margin-bottom: 10px; height: 120px; object-fit: cover; }
+        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-top: 30px; }
+        .game-card { background: var(--card); border-radius: 16px; padding: 10px; text-align: center; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
+        .game-card:hover { border-color: var(--accent); transform: translateY(-8px); box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2); }
+        .game-card img { width: 100%; border-radius: 12px; height: 110px; object-fit: cover; background: #000; }
+        .game-card h3 { font-size: 0.9rem; margin: 10px 0 5px; }
+        
+        #uv-frame { display: none; position: fixed; inset: 0; width: 100%; height: 100%; border: none; background: #000; z-index: 9999; }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Node Alpha: Game Library</h1>
-        <input type="text" id="search" class="search-bar" placeholder="Search decrypted files..." onkeyup="searchGames()">
+        <h1>Node Alpha: <span style="color:var(--accent)">Nebula Library</span></h1>
+        <input type="text" id="search" class="search-bar" placeholder="Search 500+ decrypted files..." onkeyup="searchGames()">
     </div>
 
-    <div class="game-grid" id="gameGrid">
-        <div class="game-card" onclick="launchGame('https://example.com/game1')">
-            <img src="https://via.placeholder.com/150" alt="Game Icon">
-            <h3>Retro Bowl</h3>
-        </div>
-        <div class="game-card" onclick="launchGame('https://example.com/game2')">
-            <img src="https://via.placeholder.com/150" alt="Game Icon">
-            <h3>Slope</h3>
-        </div>
-    </div>
+    <div class="game-grid" id="gameGrid"></div>
 
     <script>
-        function launchGame(url) {
-            // THE STEALTH ENGINE
+        // THE ULTIMATE NEBULA LIST
+        const games = [
+            { name: "Friday Night Funkin'", url: "https://ninja-muffin24.itch.io/funkin", img: "https://upload.wikimedia.org/wikipedia/en/a/a3/Friday_Night_Funkin%27_logo.png" },
+            { name: "Slope", url: "https://krunker.io/", img: "https://play-lh.googleusercontent.com/u_p95vM_H7mB3X5Y8n0zW6U3R_5D" },
+            { name: "Retro Bowl", url: "https://game316013.konggames.com/gamez/0031/6013/live/index.html", img: "https://play-lh.googleusercontent.com/R_v9V..." },
+            { name: "1v1.LOL", url: "https://1v1.lol", img: "https://play-lh.googleusercontent.com/..." },
+            { name: "BitLife", url: "https://bitlifeonline.com", img: "https://play-lh.googleusercontent.com/..." },
+            { name: "Minecraft Classic", url: "https://classic.minecraft.net", img: "https://p-m-c.net/..." },
+            { name: "Eaglercraft", url: "https://eaglercraft.com/mc/1.8.8/", img: "https://eaglercraft.com/logo.png" },
+            { name: "Cookie Clicker", url: "https://orteil.dashnet.org/cookieclicker/", img: "https://orteil.dashnet.org/cookieclicker/img/logo.png" },
+            { name: "Paper.io 2", url: "https://paper-io.com", img: "https://paper-io.com/img/logo.png" },
+            { name: "Subway Surfers", url: "https://subwaysurfers.com", img: "https://subwaysurfers.com/logo.png" },
+            // Add your next 490 games here!
+        ];
+
+        const grid = document.getElementById('gameGrid');
+
+        function renderGames(filter = "") {
+            grid.innerHTML = "";
+            games.forEach(game => {
+                if (game.name.toLowerCase().includes(filter)) {
+                    const card = document.createElement('div');
+                    card.className = "game-card";
+                    card.onclick = () => launchUltra(game.url);
+                    card.innerHTML = `<img src="${game.img}"><h3>${game.name}</h3>`;
+                    grid.appendChild(card);
+                }
+            });
+        }
+
+        function launchUltra(url) {
+            // ULTRAVIOLET STEALTH ENGINE
             const win = window.open('about:blank', '_blank');
-            if (!win || win.closed) {
-                alert('Popup Blocked! Please allow popups for this site.');
-                return;
-            }
-            win.document.title = 'My Drive - Google Drive';
+            if (!win) return alert("Allow Popups!");
+            
+            win.document.title = "My Drive - Google Drive";
             const iframe = win.document.createElement('iframe');
-            iframe.style.cssText = "position:fixed; top:0; left:0; bottom:0; right:0; width:100%; height:100%; border:none; margin:0; padding:0; overflow:hidden; z-index:999999;";
-            iframe.src = url;
+            iframe.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;border:none;";
+            
+            // This uses a public Ultraviolet mirror for high-speed proxying
+            iframe.src = "https://tallygok-hue.github.io/uv/service/" + btoa(url); 
             win.document.body.appendChild(iframe);
         }
 
         function searchGames() {
-            let input = document.getElementById('search').value.toLowerCase();
-            let cards = document.getElementsByClassName('game-card');
-            for (let card of cards) {
-                card.style.display = card.innerText.toLowerCase().includes(input) ? "block" : "none";
-            }
+            renderGames(document.getElementById('search').value.toLowerCase());
         }
+
+        renderGames();
     </script>
 </body>
 </html>
