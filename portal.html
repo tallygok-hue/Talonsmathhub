@@ -69,31 +69,29 @@
         </div>
     </div>
 
-    <script>
-        // THE GUARDIAN CODE - Stays 1337
-        let sequence = "";
-        document.addEventListener('keydown', (e) => {
-            sequence += e.key;
-            if (sequence.length > 4) sequence = sequence.slice(-4);
-            if (sequence === "1337") {
-                // Redirect to the secret vault
-               window.location.href = atob("aGlkZGVuLXZhdWx0Lmh0bWw=");
-            }
-        });
+  <script>
+// THE GUARDIAN CODE - Stays 1337
+let sequence = "";
+document.addEventListener('keydown', (e) => {
+    sequence += e.key;
+    if (sequence.length > 4) sequence = sequence.slice(-4);
+    if (sequence === "1337") {
+        // Redirect to the secret vault
+        window.location.href = atob("aGlkZGVuLXZhdWx0Lmh0bWw=");
+    }
+}); // <--- THIS WAS THE MISSING BRACKET
 
-        // INSTITUTIONAL ACCESS KEY
-        function checkAccess() {
-            const code = document.getElementById('accessKey').value;
-            const codes = {
-                "MATH77": "dmlwLWdhbWVzLmh0bWw=", 
-                "ALGEBRA9": "c3RhZmYtZ2FtZXMuaHRtbA==" 
-            };
-            if (codes[code]) {
-                window.location.href = atob(codes[code]);
-            } else {
-                alert("Invalid Institutional Access Key.");
-            }
-        }
-    </script>
-</body>
-</html>
+// INSTITUTIONAL ACCESS KEY
+function checkAccess() {
+    const code = document.getElementById('accessKey').value;
+    const codes = {
+        "MATH77": "aGlkZGVuLXZhdWx0Lmh0bWw=",
+        "ALGEBRA9": "aGlkZGVuLXZhdWx0Lmh0bWw="
+    };
+    if (codes[code]) {
+        window.location.href = atob(codes[code]);
+    } else {
+        alert("Invalid Institutional Access Key.");
+    }
+}
+</script>
