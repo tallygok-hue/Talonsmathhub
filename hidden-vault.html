@@ -33,4 +33,9 @@ function launchStealth(url) {
     iframe.src = url;
     win.document.body.appendChild(iframe);
 }
-</script>
+// Emergency Escape: Press 'Esc' to return to the Math Hub immediately
+document.addEventListener('keydown', (e) => {
+    if (e.key === "Escape") {
+        window.location.href = "portal.html";
+    }
+});</script>
