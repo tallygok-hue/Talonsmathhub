@@ -103,5 +103,20 @@
             }
         }
     </script>
+<script src="./uv/uv.bundle.js"></script>
+<script src="./uv/uv.config.js"></script>
+<script>
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+            navigator.serviceWorker.register('./uv/uv.sw.js', {
+                scope: __uv$config.prefix
+            }).then(() => {
+                console.log('UV Service Worker registered successfully.');
+            }).catch((err) => {
+                console.error('UV Service Worker registration failed:', err);
+            });
+        });
+    }
+</script>
 </body>
 </html>
