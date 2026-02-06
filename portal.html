@@ -11,61 +11,77 @@
             background-color: var(--bg); 
             background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 100%);
             color: var(--text); 
-            margin: 0; 
-            padding: 40px 20px;
-            min-height: 100vh;
+            margin: 0; padding: 40px 20px; min-height: 100vh; 
         }
         .container { max-width: 1100px; margin: auto; }
-        
+
         /* The Bento Grid Layout */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-            gap: 20px; 
-        }
+        .grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: 160px; gap: 20px; }
         .card { 
-            background: var(--card); 
-            backdrop-filter: blur(12px); 
-            padding: 30px; 
-            border-radius: 20px; 
-            border: 1px solid rgba(255, 255, 255, 0.1); 
-            transition: 0.4s ease; 
+            background: var(--card); backdrop-filter: blur(12px); 
+            padding: 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); 
+            transition: 0.4s ease; grid-column: span 4;
         }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); }
+        .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
         
-        /* Institutional Access Styling */
-        .access-box { text-align: center; margin-bottom: 40px; }
-        input { 
-            padding: 12px; border-radius: 8px; border: 1px solid #334155; 
-            background: #0f172a; color: white; width: 220px; 
-        }
-        button { 
-            padding: 12px 24px; background: var(--primary); border: none; 
-            border-radius: 8px; color: #020617; font-weight: bold; cursor: pointer; 
-        }
+        /* Nebula-Style Featured Cards */
+        .large { grid-column: span 8; grid-row: span 2; }
+        .tall { grid-row: span 2; }
+
+        /* Access Header */
+        .access-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        input { padding: 12px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; width: 220px; }
+        button { padding: 12px 24px; background: var(--primary); border: none; border-radius: 12px; color: #020617; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
     <div class="container">
         <div class="access-box">
-            <h2>Institutional Access</h2>
-            <input type="password" id="accessKey" placeholder="Enter Access Key">
-            <button onclick="checkAccess()">Validate</button>
+            <h1>Math Hub <span style="font-weight: 200; opacity: 0.5;">v4.2.0</span></h1>
+            <div>
+                <input type="password" id="accessKey" placeholder="Institutional Key">
+                <button onclick="checkAccess()">Validate</button>
+            </div>
         </div>
 
         <div class="grid">
-            <div class="card">
-                <h3>Calculus III</h3>
-                <p>Multivariable integration and vector fields.</p>
+            <div class="card large">
+                <h2 style="color: var(--primary);">Calculus III: Computational Theory</h2>
+                <p>Analyzing multi-dimensional vector spaces and stokes theorem applications.</p>
+                <div style="background: #000; padding: 15px; border-radius: 12px; font-family: monospace; color: #10b981; margin-top: 20px;">
+                    > Node: school.dover_active <br>
+                    > Status: Secure <br>
+                    > Protocol: Nebula_Disguise_v2
+                </div>
+            </div>
+            <div class="card tall">
+                <h3>System Health</h3>
+                <p>All modules operational. Syncing with global math repositories.</p>
             </div>
             <div class="card">
-                <h3>Quantum Mechanics</h3>
-                <p>Mathematical foundations of wave functions.</p>
+                <h3>Linear Algebra</h3>
+                <p>Matrix factorization and eigen-decompositions.</p>
+            </div>
+            <div class="card">
+                <h3>Probability</h3>
+                <p>Stochastic models and predictive distributions.</p>
             </div>
         </div>
     </div>
 
     <script>
+        // THE GUARDIAN CODE - Stays 1337
+        let sequence = "";
+        document.addEventListener('keydown', (e) => {
+            sequence += e.key;
+            if (sequence.length > 4) sequence = sequence.slice(-4);
+            if (sequence === "1337") {
+                // Redirect to the secret vault
+                window.location.href = atob("aGlkZGVuLXZhdWx0Lmh0bWw=");
+            }
+        });
+
+        // INSTITUTIONAL ACCESS KEY
         function checkAccess() {
             const code = document.getElementById('accessKey').value;
             const codes = {
@@ -78,15 +94,6 @@
                 alert("Invalid Institutional Access Key.");
             }
         }
-
-        let sequence = "";
-        document.addEventListener('keydown', (e) => {
-            sequence += e.key;
-            if (sequence.length > 4) sequence = sequence.slice(-4);
-            if (sequence === "1337") {
-                window.location.href = atob("aGlkZGVuLXZhdWx0Lmh0bWw=");
-            }
-        });
     </script>
 </body>
 </html>
