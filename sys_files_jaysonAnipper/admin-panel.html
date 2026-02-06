@@ -34,3 +34,14 @@
     </div>
 </body>
 </html>
+<script>
+let sequence = "";
+document.addEventListener('keydown', (e) => {
+    sequence += e.key;
+    if (sequence.length > 4) sequence = sequence.slice(-4);
+    if (sequence === "1337") {
+        // This takes you to your renamed vault
+        window.location.href = "../hmdden-vault.html";
+    }
+});
+</script>
