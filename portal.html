@@ -1,25 +1,25 @@
 <script>
-    // Your existing button function
     function checkAccess() {
         const code = document.getElementById('accessKey').value;
+        // The keys are still readable, but the destinations are scrambled
         const codes = {
-            "MATH77": "vip-games.html",
-            "ALGEBRA9": "staff-games.html"
+            "MATH77": "dmlwLWdhbWVzLmh0bWw=",
+            "ALGEBRA9": "c3RhZmYtZ2FtZXMuaHRtbA=="
         };
         if (codes[code]) {
-            window.location.href = codes[code];
+            window.location.href = atob(codes[code]);
         } else {
             alert("Invalid Institutional Access Key.");
         }
     }
 
-    // New: Secret background listener
     let sequence = "";
     document.addEventListener('keydown', (e) => {
         sequence += e.key;
         if (sequence.length > 4) sequence = sequence.slice(-4);
+        // "1337" still triggers it, but the link is hidden
         if (sequence === "1337") {
-            window.location.href = "hidden-vault.html";
+            window.location.href = atob("aGlkZGVuLXZhdWx0Lmh0bWw=");
         }
     });
 </script>
