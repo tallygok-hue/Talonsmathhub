@@ -2,96 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Advanced Mathematics Hub | Student Portal</title>
+    <title>Student Dashboard | Mathematics Dept</title>
     <style>
-        :root { --primary: #38bdf8; --bg: #020617; --card: rgba(30, 41, 59, 0.5); --text: #f8fafc; }
-        body { 
-            font-family: 'Inter', sans-serif; 
-            background-color: var(--bg); 
-            background-image: radial-gradient(circle at 50% 0%, #1e293b 0%, #020617 100%);
-            color: var(--text); 
-            margin: 0; padding: 40px 20px; min-height: 100vh; 
-        }
-        .container { max-width: 1100px; margin: auto; }
-
-        /* The Bento Grid Layout */
-        .grid { display: grid; grid-template-columns: repeat(12, 1fr); grid-auto-rows: 160px; gap: 20px; }
-        .card { 
-            background: var(--card); backdrop-filter: blur(12px); 
-            padding: 30px; border-radius: 24px; border: 1px solid rgba(255, 255, 255, 0.1); 
-            transition: 0.4s ease; grid-column: span 4;
-        }
-        .card:hover { transform: translateY(-5px); border-color: var(--primary); box-shadow: 0 0 20px rgba(56, 189, 248, 0.2); }
+        :root { --bg: #020617; --card: #0f172a; --accent: #38bdf8; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; padding: 40px; margin: 0; }
         
-        /* Nebula-Style Featured Cards */
-        .large { grid-column: span 8; grid-row: span 2; }
-        .tall { grid-row: span 2; }
+        /* Bento Grid Setup */
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { margin-bottom: 40px; border-left: 4px solid var(--accent); padding-left: 20px; }
+        
+        .grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            grid-auto-rows: 200px; 
+            gap: 20px; 
+        }
 
-        /* Access Header */
-        .access-box { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        input { padding: 12px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; color: white; width: 220px; }
-        button { padding: 12px 24px; background: var(--primary); border: none; border-radius: 12px; color: #020617; font-weight: bold; cursor: pointer; }
+        .card { 
+            background: var(--card); 
+            border: 1px solid rgba(255,255,255,0.1); 
+            border-radius: 24px; 
+            padding: 24px; 
+            transition: 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover { transform: translateY(-5px); border-color: var(--accent); box-shadow: 0 10px 30px rgba(56, 189, 248, 0.1); }
+        .large { grid-column: span 2; grid-row: span 2; }
+        
+        .card h3 { color: var(--accent); margin-top: 0; }
+        .card p { color: #94a3b8; font-size: 0.9rem; }
+
+        /* Access Key Input */
+        .input-box { 
+            background: rgba(255,255,255,0.05); 
+            border: 1px solid #1e293b; 
+            padding: 10px; 
+            border-radius: 8px; 
+            color: white; 
+            width: 200px;
+        }
+        .btn { background: var(--accent); color: #000; border: none; padding: 10px 20px; border-radius: 8px; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="access-box">
-            <h1>Math Hub <span style="font-weight: 200; opacity: 0.5;">v4.2.0</span></h1>
-            <div>
-                <input type="password" id="accessKey" placeholder="Institutional Key">
-                <button onclick="checkAccess()">Validate</button>
-            </div>
+        <div class="header">
+            <h1>Academic Portal</h1>
+            <p>Welcome back, Student. Access your course modules below.</p>
         </div>
 
         <div class="grid">
             <div class="card large">
-                <h2 style="color: var(--primary);">Calculus III: Computational Theory</h2>
-                <p>Analyzing multi-dimensional vector spaces and stokes theorem applications.</p>
-                <div style="background: #000; padding: 15px; border-radius: 12px; font-family: monospace; color: #10b981; margin-top: 20px;">
-                    > Node: school.dover_active <br>
-                    > Status: Secure <br>
-                    > Protocol: Nebula_Disguise_v2
+                <h3>Advanced Calculus & Analysis</h3>
+                <p>Course Code: MATH-401<br>Current Module: Integral Vector Theorems</p>
+                <div style="margin-top: 40px;">
+                    <input type="text" id="accessKey" class="input-box" placeholder="Institutional Key...">
+                    <button class="btn" onclick="checkAccess()">VALIDATE</button>
                 </div>
             </div>
-            <div class="card tall">
-                <h3>System Health</h3>
-                <p>All modules operational. Syncing with global math repositories.</p>
-            </div>
+
             <div class="card">
                 <h3>Linear Algebra</h3>
-                <p>Matrix factorization and eigen-decompositions.</p>
+                <p>Focus: Eigenvalues & Markov Chains</p>
             </div>
             <div class="card">
                 <h3>Probability</h3>
-                <p>Stochastic models and predictive distributions.</p>
+                <p>Focus: Stochastic Processes</p>
+            </div>
+            <div class="card">
+                <h3>Topology</h3>
+                <p>Focus: Manifolds & Connectivity</p>
             </div>
         </div>
     </div>
 
-  <script>
-// THE GUARDIAN CODE - Stays 1337
-let sequence = "";
-document.addEventListener('keydown', (e) => {
-    sequence += e.key;
-    if (sequence.length > 4) sequence = sequence.slice(-4);
-    if (sequence === "1337") {
-        // Redirect to the secret vault
-        window.location.href = atob("aGlkZGVuLXZhdWx0Lmh0bWw=");
-    }
-}); // <--- THIS WAS THE MISSING BRACKET
+    <script>
+        // THE GUARDIAN CODE - 1337
+        let sequence = "";
+        document.addEventListener('keydown', (e) => {
+            sequence += e.key;
+            if (sequence.length > 4) sequence = sequence.slice(-4);
+            if (sequence === "1337") {
+                window.location.href = "hmdden-vault.html";
+            }
+        });
 
-// INSTITUTIONAL ACCESS KEY
-function checkAccess() {
-    const code = document.getElementById('accessKey').value;
-    const codes = {
-        "MATH77": "aGlkZGVuLXZhdWx0Lmh0bWw=",
-        "ALGEBRA9": "aGlkZGVuLXZhdWx0Lmh0bWw="
-    };
-    if (codes[code]) {
-        window.location.href = atob(codes[code]);
-    } else {
-        alert("Invalid Institutional Access Key.");
-    }
-}
-</script>
+        // ACCESS KEY LOGIC
+        function checkAccess() {
+            const code = document.getElementById('accessKey').value;
+            const codes = {
+                "MATH77": "aG1kZGVuLXZhdWx0Lmh0bWw=",
+                "ALGEBRA9": "aG1kZGVuLXZhdWx0Lmh0bWw="
+            };
+            if (codes[code]) {
+                window.location.href = atob(codes[code]);
+            } else {
+                alert("Access Denied: Invalid Institution Key");
+            }
+        }
+    </script>
+</body>
+</html>
