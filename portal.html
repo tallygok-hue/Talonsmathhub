@@ -81,42 +81,44 @@
     <script>
         // THE GUARDIAN CODE - 1337
         let sequence = "";
-        document.addEventListener('keydown', (e) => {
-            sequence += e.key;
-            if (sequence.length > 4) sequence = sequence.slice(-4);
-            if (sequence === "1337") {
-                window.location.href = "hmdden-vault.html";
-            }
-        });
-
-        // ACCESS KEY LOGIC
-        function checkAccess() {
-            const code = document.getElementById('accessKey').value;
-            const codes = {
-                "MATH77": "aG1kZGVuLXZhdWx0Lmh0bWw=",
-                "ALGEBRA9": "aG1kZGVuLXZhdWx0Lmh0bWw="
-            };
-            if (codes[code]) {
-                window.location.href = atob(codes[code]);
-            } else {
-                alert("Access Denied: Invalid Institution Key");
-            }
-        }
-    </script>
-<script src="./uv/uv.bundle.js"></script>
+     <script src="./uv/uv.bundle.js"></script>
 <script src="./uv/uv.config.js"></script>
 <script>
+    // 1. THE GUARDIAN CODE - 1337
+   <script src="./uv/uv.bundle.js"></script>
+<script src="./uv/uv.config.js"></script>
+<script>
+    // 1. THE GUARDIAN CODE - 1337
+    let sequence = "";
+    document.addEventListener('keydown', (e) => {
+        sequence += e.key;
+        if (sequence.length > 4) sequence = sequence.slice(-4);
+        if (sequence === "1337") {
+            window.location.href = "hmdden-vault.html";
+        }
+    });
+
+    // 2. ACCESS KEY LOGIC
+    function checkAccess() {
+        const code = document.getElementById('accessKey').value;
+        const codes = {
+            "MATH77": "aG1kZGVuLXZhdWx0Lmh0bWw=",
+            "ALGEBRA9": "aG1kZGVuLXZhdWx0Lmh0bWw="
+        };
+        if (codes[code]) {
+            // Decodes the base64 and redirects
+            window.location.href = atob(codes[code]);
+        } else {
+            alert("Access Denied: Invalid Institution Key");
+        }
+    }
+
+    // 3. REGISTER ULTRAVIOLET
     if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
             navigator.serviceWorker.register('./uv/uv.sw.js', {
                 scope: __uv$config.prefix
-            }).then(() => {
-                console.log('UV Service Worker registered successfully.');
-            }).catch((err) => {
-                console.error('UV Service Worker registration failed:', err);
-            });
+            }).catch(err => console.error("UV SW Registration Failed:", err));
         });
     }
 </script>
-</body>
-</html>
