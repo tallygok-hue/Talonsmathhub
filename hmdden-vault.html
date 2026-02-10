@@ -2,118 +2,25 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>SECURE NODE: ALPHA | NEBULA ENGINE</title>
-    <style>
-        :root { --bg: #020617; --accent: #38bdf8; --card: #1e293b; --text: #f8fafc; }
-        body { background: var(--bg); color: var(--text); font-family: 'Inter', sans-serif; padding: 30px; margin: 0; }
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 20px; position: sticky; top: 0; background: var(--bg); z-index: 100; }
-        .search-bar { background: var(--card); border: 1px solid var(--accent); color: white; padding: 12px 20px; border-radius: 12px; width: 400px; font-size: 1rem; }
-        
-        .game-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 20px; margin-top: 30px; }
-        .game-card { background: var(--card); border-radius: 16px; padding: 10px; text-align: center; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; border: 1px solid rgba(255,255,255,0.05); }
-        .game-card:hover { border-color: var(--accent); transform: translateY(-8px); box-shadow: 0 10px 20px rgba(56, 189, 248, 0.2); }
-        .game-card img { width: 100%; border-radius: 12px; height: 110px; object-fit: cover; background: #000; }
-        .game-card h3 { font-size: 0.9rem; margin: 10px 0 5px; }
-        
-        #uv-frame { display: none; position: fixed; inset: 0; width: 100%; height: 100%; border: none; background: #000; z-index: 9999; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talons Gaming Library</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="header">
-        <h1>Node Alpha: <span style="color:var(--accent)">Nebula Library</span></h1>
-        <input type="text" id="search" class="search-bar" placeholder="Search 500+ decrypted files..." onkeyup="searchGames()">
-    </div>
 
-    <div class="game-grid" id="gameGrid"></div>
+<header>
+    <h1>Welcome to the Talons Gaming Library</h1>
+    <p>Your hub for gaming resources and tools.</p>
+</header>
 
-    <script>
-        // THE ULTIMATE NEBULA LIST
-     const games = [
-  { name: "Minecraft", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/mc.png", url: "https://minecraft.net" },
-        { name: "Slope", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/slope.png", url: "https://slopegame.com" },
-        { name: "1v1.LOL", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/1v1.png", url: "https://1v1.lol" },
-        { name: "Bitlife", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/bitlife.png", url: "https://bitlife.com" },
-        { name: "Tetris", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/tetris.png", url: "https://tetris.com" },
-        { name: "Retro Bowl", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/retrobowl.png", url: "https://retrobowl.me" },
-        { name: "Tunnel Rush", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/tunnel.png", url: "https://tunnelrush.com" },
-        { name: "Happy Wheels", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/wheels.png", url: "https://totaljerkface.com" },
-        { name: "Run 3", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/run3.png", url: "https://run3.io" },
-        { name: "Cookie Clicker", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/cookie.png", url: "https://orteil.dashnet.org/cookieclicker/" },
-        { name: "Among Us", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/amongus.png", url: "https://among-us.io" },
-        { name: "Friday Night Funkin", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/fnf.png", url: "https://ninja-muffin24.itch.io/funkin" },
-        { name: "Geometry Dash", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/gd.png", url: "https://geometrydash.io" },
-        { name: "Paper.io 2", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/paperio.png", url: "https://paper-io.com" },
-        { name: "Shell Shockers", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/shell.png", url: "https://shellshock.io" },
-        { name: "Subway Surfers", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/subway.png", url: "https://subwaysurfers.com" },
-        { name: "Temple Run 2", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/temple.png", url: "https://templerun.com" },
-        { name: "Vex 7", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/vex7.png", url: "https://vex7.io" },
-        { name: "Bottle Flip", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/bottle.png", url: "https://bottleflip.com" },
-        { name: "Crossy Road", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/crossy.png", url: "https://crossyroad.com" },
-        { name: "Eaglercraft", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/eagler.png", url: "https://eaglercraft.com" },
-        { name: "Basketball Stars", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/bbstars.png", url: "https://basketballstars.com" },
-        { name: "Drive Mad", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/drivemad.png", url: "https://drivemad.com" },
-        { name: "Stickman Hook", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/hook.png", url: "https://stickmanhook.com" },
-        { name: "Worlds Hardest Game", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/whg.png", url: "https://worldshardestgame.com" },
-        { name: "Terraria", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/terraria.png", url: "https://terraria.org" },
-        { name: "Fruit Ninja", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/fruit.png", url: "https://fruitninja.com" },
-        { name: "Cut the Rope", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/ctr.png", url: "https://cuttherope.net" },
-        { name: "Jetpack Joyride", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/jetpack.png", url: "https://halfbrick.com" },
-        { name: "Agar.io", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/agario.png", url: "https://agar.io" },
-        { name: "Slither.io", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/slither.png", url: "https://slither.io" },
-        { name: "Diep.io", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/diepio.png", url: "https://diep.io" },
-        { name: "Zombs Royale", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/zombs.png", url: "https://zombsroyale.io" },
-        { name: "Krunker", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/krunker.png", url: "https://krunker.io" },
-        { name: "Super Mario 64", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/sm64.png", url: "https://froggi.es/mario/" },
-        { name: "Sonic the Hedgehog", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/sonic.png", url: "https://sonic.com" },
-        { name: "Doodle Jump", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/doodle.png", url: "https://doodlejump.io" },
-        { name: "2048", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/2048.png", url: "https://play2048.co" },
-        { name: "Flappy Bird", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/flappy.png", url: "https://flappybird.io" },
-        { name: "Moto X3M", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/motox3m.png", url: "https://motox3m.com" },
-        { name: "Drift Hunters", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/drift.png", url: "https://drifthunters.com" },
-        { name: "Smash Karts", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/smash.png", url: "https://smashkarts.io" },
-        { name: "G-Switch 3", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/gswitch.png", url: "https://gswitch.com" },
-        { name: "Tomb Runner", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/tomb.png", url: "https://tombrunner.com" },
-        { name: "Fireboy and Watergirl", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/fbwg.png", url: "https://fireboywatergirl.online" },
-        { name: "Boxel Rebound", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/boxel.png", url: "https://boxelrebound.com" },
-        { name: "Taming.io", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/taming.png", url: "https://taming.io" },
-        { name: "Pac-Man", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/pacman.png", url: "https://google.com/logos/2010/pacman10-i.html" },
-        { name: "Snake", img: "https://tallygok-hue.github.io/Talonsmathhub/assets/snake.png", url: "https://google.com/search?q=play+snake" }
-    ];
+<section>
+    <h2>About Talons Gaming Library</h2>
+    <p>Talons Gaming Library offers a wide range of gaming resources that enhance your gaming experience.</p>
+</section>
 
-        const grid = document.getElementById('gameGrid');
+<footer>
+    <p>Contact us at info@talonsgaminglibrary.com</p>
+</footer>
 
-        function renderGames(filter = "") {
-            grid.innerHTML = "";
-            games.forEach(game => {
-                if (game.name.toLowerCase().includes(filter)) {
-                    const card = document.createElement('div');
-                    card.className = "game-card";
-                    card.onclick = () => launchUltra(game.url);
-                    card.innerHTML = `<img src="${game.img}"><h3>${game.name}</h3>`;
-                    grid.appendChild(card);
-                }
-            });
-        }
-
-        function launchUltra(url) {
-            // ULTRAVIOLET STEALTH ENGINE
-            const win = window.open('about:blank', '_blank');
-            if (!win) return alert("Allow Popups!");
-            
-            win.document.title = "My Drive - Google Drive";
-            const iframe = win.document.createElement('iframe');
-            iframe.style.cssText = "position:fixed;top:0;left:0;width:100%;height:100%;border:none;";
-            
-            // This uses a public Ultraviolet mirror for high-speed proxying
-            iframe.src = "https://tallygok-hue.github.io/uv/service/" + btoa(url); 
-            win.document.body.appendChild(iframe);
-        }
-
-        function searchGames() {
-            renderGames(document.getElementById('search').value.toLowerCase());
-        }
-
-        renderGames();
-    </script>
 </body>
 </html>
