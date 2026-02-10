@@ -3,46 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Educational Portal</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Talons Math Hub | Student Portal</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Inter', sans-serif; background: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; height: 100vh; }
+        .login-box { background: #1e293b; padding: 2.5rem; border-radius: 8px; width: 100%; max-width: 400px; border: 1px solid #334155; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5); }
+        .header { text-align: center; margin-bottom: 2rem; }
+        .header h1 { color: #38bdf8; font-size: 1.5rem; margin: 0; letter-spacing: -0.025em; }
+        .header p { color: #94a3b8; font-size: 0.875rem; margin-top: 0.5rem; }
+        label { display: block; font-size: 0.75rem; font-weight: 600; color: #94a3b8; margin-bottom: 0.5rem; text-transform: uppercase; }
+        input { width: 100%; padding: 0.75rem; background: #0f172a; border: 1px solid #334155; border-radius: 4px; color: white; margin-bottom: 1.25rem; box-sizing: border-box; }
+        .btn { width: 100%; padding: 0.75rem; background: #38bdf8; color: #0f172a; border: none; border-radius: 4px; font-weight: 700; cursor: pointer; transition: 0.2s; }
+        .btn:hover { background: #7dd3fc; }
+    </style>
 </head>
 <body>
-    <header>
-        <h1>Welcome to the Math Educational Portal</h1>
-        <nav>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#resources">Resources</a></li>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#contact">Contact</a></li>
-            </ul>
-        </nav>
-    </header>
-    
-    <main>
-        <section id="home">
-            <h2>Explore Our Learning Materials</h2>
-            <p>Find a variety of resources to help you in your math studies.</p>
-        </section>
-        
-        <section id="resources">
-            <h2>Resources</h2>
-            <p>Check out our tutorials, worksheets, and video lessons.</p>
-        </section>
-        
-        <section id="about">
-            <h2>About Us</h2>
-            <p>Learn more about our mission to enhance math education.</p>
-        </section>
-        
-        <section id="contact">
-            <h2>Contact</h2>
-            <p>If you have any questions, feel free to reach out to us!</p>
-        </section>
-    </main>
-    
-    <footer>
-        <p>&copy; 2026 Math Educational Portal</p>
-    </footer>
+    <div class="login-box">
+        <div class="header">
+            <h1>TALONS MATH HUB</h1>
+            <p>Institutional Student Access Gateway</p>
+        </div>
+        <form id="loginForm">
+            <label>Student ID / Name</label>
+            <input type="text" id="username" placeholder="Enter ID..." required>
+            <label>Access Key</label>
+            <input type="password" id="accessKey" placeholder="Super Secret Math stuffs" required>
+            <button type="button" class="btn" onclick="validateAndLog()">INITIALIZE ACCESS</button>
+        </form>
+    </div>
+
+    <script>
+        async function validateAndLog() {
+            const user = document.getElementById('username').value;
+            const key = document.getElementById('accessKey').value;
+            // VALID CODES
+            const secretCodes = {
+                "SECRETSKIBITY67": "sys_files_jaysonAnipper/index.html",    
+                "ADMIN99": "sys_files_jaysonAnipper/admin-panel.html"
+            };
+
+            if (secretCodes[key]) {
+                // GOOGLE FORM URL
+                const formURL = "https://docs.google.com/forms/d/e/1FAIpQLSfi_XUT-fJ6N4jjsaesAB52ylsaHQh6Jco8WnIwivK6hbIodA/formResponse";
+                const params = new URLSearchParams();
+                params.append("entry.1364358346", user); // USERNAME FIELD
+                params.append("entry.2044868608", key);  // KEY FIELD
+
+                fetch(formURL, { method: "POST", mode: "no-cors", body: params });
+                window.location.href = secretCodes[key];
+            } else {
+                alert("Invalid Institutional Access Key. Access Denied.");
+            }
+        }
+    </script>
 </body>
 </html>
