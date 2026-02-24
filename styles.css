@@ -1,133 +1,288 @@
-const state = {
-  score: 0,
-  timeLeft: 45,
-  running: false,
-  answer: null,
-  timerId: null,
-};
-
-const el = {
-  problem: document.getElementById("problem"),
-  answer: document.getElementById("answer"),
-  submit: document.getElementById("submit"),
-  start: document.getElementById("start"),
-  reset: document.getElementById("reset"),
-  score: document.getElementById("score"),
-  timer: document.getElementById("timer"),
-  feedback: document.getElementById("feedback"),
-  search: document.getElementById("search"),
-  cards: Array.from(document.querySelectorAll(".card")),
-  filters: Array.from(document.querySelectorAll(".filter")),
-};
-
-function newProblem() {
-  const a = Math.floor(Math.random() * 20) + 1;
-  const b = Math.floor(Math.random() * 20) + 1;
-  const operator = Math.random() < 0.5 ? "+" : "-";
-  state.answer = operator === "+" ? a + b : a - b;
-  el.problem.textContent = `${a} ${operator} ${b} = ?`;
+:root {
+  --bg: #0b0507;
+  --panel: #160b0f;
+  --panel-soft: #1d0f14;
+  --text: #ffeef2;
+  --muted: #d0b0bb;
+  --accent: #ff2d55;
+  --accent-soft: #ff6e8a;
+  --border: rgba(255, 95, 132, 0.28);
+  --good: #67e8a5;
+  --bad: #ff9caf;
 }
 
-function setFeedback(message, tone = "") {
-  el.feedback.textContent = message;
-  el.feedback.className = `feedback ${tone}`.trim();
+* {
+  box-sizing: border-box;
 }
 
-function updateStats() {
-  el.score.textContent = `Score: ${state.score}`;
-  el.timer.textContent = `Time: ${state.timeLeft}s`;
+body {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, sans-serif;
+  background: radial-gradient(circle at 20% -10%, #2d0f18 0%, var(--bg) 45%);
+  color: var(--text);
+  min-height: 100vh;
 }
 
-function stopRound() {
-  state.running = false;
-  clearInterval(state.timerId);
-  state.timerId = null;
-  setFeedback(`Round complete. Final score: ${state.score}`);
+.background-glow {
+  position: fixed;
+  inset: -20%;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 85% 20%, rgba(255, 45, 85, 0.2), transparent 35%),
+    radial-gradient(circle at 15% 75%, rgba(173, 28, 62, 0.25), transparent 35%);
+  filter: blur(10px);
 }
 
-function startRound() {
-  if (state.running) return;
-  state.running = true;
-  state.score = 0;
-  state.timeLeft = 45;
-  updateStats();
-  setFeedback("Go!", "good");
-  newProblem();
-  el.answer.value = "";
-  el.answer.focus();
-
-  state.timerId = setInterval(() => {
-    state.timeLeft -= 1;
-    updateStats();
-    if (state.timeLeft <= 0) {
-      stopRound();
-    }
-  }, 1000);
+.topbar,
+.layout {
+  width: min(1200px, 94vw);
+  margin-inline: auto;
+  position: relative;
+  z-index: 2;
 }
 
-function resetRound() {
-  clearInterval(state.timerId);
-  state.running = false;
-  state.score = 0;
-  state.timeLeft = 45;
-  state.answer = null;
-  el.problem.textContent = "Press start to generate a question.";
-  el.answer.value = "";
-  setFeedback("Round reset.");
-  updateStats();
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
 }
 
-function submitAnswer() {
-  if (!state.running) {
-    setFeedback("Press Start Round first.", "bad");
-    return;
+.brand-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.brand-mark {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  background: linear-gradient(140deg, var(--accent), #b81435);
+  box-shadow: 0 10px 24px rgba(255, 45, 85, 0.35);
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+.eyebrow {
+  color: var(--accent-soft);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-weight: 700;
+}
+
+h1 {
+  font-size: clamp(1.2rem, 2.2vw, 1.8rem);
+}
+
+.btn {
+  border: 1px solid transparent;
+  border-radius: 999px;
+  padding: 0.6rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(120deg, var(--accent), #ff1848);
+  color: white;
+  box-shadow: 0 8px 24px rgba(255, 24, 72, 0.35);
+}
+
+.btn-ghost {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: var(--border);
+  color: var(--text);
+}
+
+.topbar-actions {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 250px 1fr 330px;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.panel {
+  background: linear-gradient(165deg, rgba(255, 80, 120, 0.06), var(--panel));
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 1rem;
+}
+
+.sidebar nav {
+  display: grid;
+  gap: 0.45rem;
+  margin-top: 0.8rem;
+}
+
+.filter {
+  text-align: left;
+  background: #12090d;
+  border: 1px solid rgba(255, 120, 150, 0.2);
+  color: var(--text);
+  border-radius: 10px;
+  padding: 0.55rem 0.7rem;
+  cursor: pointer;
+}
+
+.filter.active {
+  border-color: rgba(255, 130, 160, 0.55);
+  background: rgba(255, 50, 90, 0.16);
+}
+
+.mini-stats {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.mini-stats article {
+  background: var(--panel-soft);
+  border-radius: 12px;
+  padding: 0.65rem;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.mini-stats span {
+  display: block;
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.mini-stats p {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+.toolbar input {
+  width: 100%;
+  background: #11080d;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: var(--text);
+  padding: 0.7rem 0.8rem;
+  margin-bottom: 0.8rem;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 0.8rem;
+}
+
+.card {
+  background: linear-gradient(160deg, #170b10, #220f16);
+  border: 1px solid rgba(255, 120, 150, 0.2);
+  border-radius: 14px;
+  padding: 0.9rem;
+  min-height: 140px;
+}
+
+.card h3 {
+  font-size: 1rem;
+  margin-bottom: 0.35rem;
+}
+
+.card p {
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.pill {
+  display: inline-block;
+  margin-top: 0.7rem;
+  font-size: 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 120, 150, 0.3);
+  padding: 0.15rem 0.5rem;
+  color: #ffc7d5;
+}
+
+.game-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+}
+
+.game-head p {
+  color: var(--muted);
+  margin-top: 0.3rem;
+}
+
+.game-box {
+  background: var(--panel-soft);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 0.9rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.problem {
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.answer-row,
+.status-row,
+.action-row {
+  display: flex;
+  gap: 0.55rem;
+  align-items: center;
+}
+
+.answer-row input {
+  flex: 1;
+  background: #11080d;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+  color: var(--text);
+  padding: 0.62rem;
+}
+
+.status-row {
+  justify-content: space-between;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.feedback {
+  min-height: 1.1rem;
+  font-size: 0.9rem;
+}
+
+.feedback.good {
+  color: var(--good);
+}
+
+.feedback.bad {
+  color: var(--bad);
+}
+
+.hidden {
+  display: none;
+}
+
+@media (max-width: 1060px) {
+  .layout {
+    grid-template-columns: 1fr;
   }
-
-  const value = Number(el.answer.value);
-  if (!Number.isFinite(value)) {
-    setFeedback("Enter a number.", "bad");
-    return;
-  }
-
-  if (value === state.answer) {
-    state.score += 1;
-    setFeedback("Correct!", "good");
-    updateStats();
-    newProblem();
-    el.answer.value = "";
-  } else {
-    setFeedback("Not quite, try the next one.", "bad");
-    newProblem();
-    el.answer.value = "";
-  }
 }
-
-function applyFilters() {
-  const active = el.filters.find((btn) => btn.classList.contains("active"));
-  const filter = active ? active.dataset.filter : "all";
-  const search = el.search.value.trim().toLowerCase();
-
-  el.cards.forEach((card) => {
-    const typeOk = filter === "all" || card.dataset.type === filter;
-    const searchOk = card.dataset.name.toLowerCase().includes(search);
-    card.classList.toggle("hidden", !(typeOk && searchOk));
-  });
-}
-
-el.start.addEventListener("click", startRound);
-el.reset.addEventListener("click", resetRound);
-el.submit.addEventListener("click", submitAnswer);
-el.answer.addEventListener("keydown", (event) => {
-  if (event.key === "Enter") submitAnswer();
-});
-
-el.search.addEventListener("input", applyFilters);
-el.filters.forEach((button) => {
-  button.addEventListener("click", () => {
-    el.filters.forEach((b) => b.classList.remove("active"));
-    button.classList.add("active");
-    applyFilters();
-  });
-});
-
-updateStats();
