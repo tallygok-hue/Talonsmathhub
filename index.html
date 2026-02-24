@@ -1,27 +1,113 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Talon's Math Hub</title>
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <header>
-    <h1>Talon's Math Hub</h1>
-    <p>Learn. Play. Compete.</p>
-  </header>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Talons Math Hub</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="background-glow" aria-hidden="true"></div>
 
-  <main>
-    <section class="games">
-      <div class="card">Game 1</div>
-      <div class="card">Game 2</div>
-      <div class="card">Game 3</div>
-    </section>
-  </main>
+    <header class="topbar">
+      <div class="brand-wrap">
+        <div class="brand-mark">T</div>
+        <div>
+          <p class="eyebrow">School Math Arcade</p>
+          <h1>Talons Math Hub</h1>
+        </div>
+      </div>
+      <div class="topbar-actions">
+        <button class="btn btn-ghost">Classroom Mode</button>
+        <button class="btn btn-primary">Start Challenge</button>
+      </div>
+    </header>
 
-  <footer>
-    <p>© 2026 Talon's Math Hub</p>
-  </footer>
-</body>
+    <main class="layout">
+      <aside class="panel sidebar">
+        <h2>Game Library</h2>
+        <nav aria-label="Game filters">
+          <button class="filter active" data-filter="all">All Games</button>
+          <button class="filter" data-filter="arithmetic">Arithmetic</button>
+          <button class="filter" data-filter="fractions">Fractions</button>
+          <button class="filter" data-filter="algebra">Algebra</button>
+          <button class="filter" data-filter="logic">Logic</button>
+        </nav>
+        <div class="mini-stats">
+          <article>
+            <span>7</span>
+            <p>Starter games</p>
+          </article>
+          <article>
+            <span>2 min</span>
+            <p>Average round</p>
+          </article>
+          <article>
+            <span>100%</span>
+            <p>School safe</p>
+          </article>
+        </div>
+      </aside>
+
+      <section class="panel content">
+        <div class="toolbar">
+          <input id="search" type="search" placeholder="Search a game..." aria-label="Search games" />
+        </div>
+
+        <section class="card-grid" aria-label="Math games">
+          <article class="card" data-type="arithmetic" data-name="Solo Sprint">
+            <h3>Solo Sprint</h3>
+            <p>Fast addition/subtraction rounds against a countdown.</p>
+            <span class="pill">Arithmetic</span>
+          </article>
+          <article class="card" data-type="fractions" data-name="Fraction Arena">
+            <h3>Fraction Arena</h3>
+            <p>Simplify and compare fractions before time runs out.</p>
+            <span class="pill">Fractions</span>
+          </article>
+          <article class="card" data-type="algebra" data-name="Algebra Blitz">
+            <h3>Algebra Blitz</h3>
+            <p>Solve one-step equations and chain streaks for bonus points.</p>
+            <span class="pill">Algebra</span>
+          </article>
+          <article class="card" data-type="logic" data-name="Pattern Vault">
+            <h3>Pattern Vault</h3>
+            <p>Identify number patterns and complete each sequence.</p>
+            <span class="pill">Logic</span>
+          </article>
+        </section>
+      </section>
+
+      <section class="panel game-panel">
+        <div class="game-head">
+          <h2>Quick Practice</h2>
+          <p>Answer as many as you can in 45 seconds.</p>
+        </div>
+        <div class="game-box">
+          <p id="problem" class="problem">Press start to generate a question.</p>
+          <div class="answer-row">
+            <input id="answer" type="number" inputmode="numeric" placeholder="Your answer" />
+            <button id="submit" class="btn btn-primary">Submit</button>
+          </div>
+          <div class="status-row">
+            <span id="score">Score: 0</span>
+            <span id="timer">Time: 45s</span>
+          </div>
+          <div class="action-row">
+            <button id="start" class="btn btn-ghost">Start Round</button>
+            <button id="reset" class="btn btn-ghost">Reset</button>
+          </div>
+          <p id="feedback" class="feedback" aria-live="polite"></p>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
 </html>
