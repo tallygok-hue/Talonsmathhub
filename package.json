@@ -1,0 +1,498 @@
+import { useState, useEffect } from 'react';
+
+interface GamePortalProps {
+  username: string;
+  isAdmin: boolean;
+  onLogout: () => void;
+  onAdminPanel: () => void;
+}
+
+interface Game {
+  id: string;
+  name: string;
+  icon: string;
+  category: string;
+  url: string;
+  description: string;
+  color: string;
+  source?: 's3' | 'dover' | 'official' | 'external';
+}
+
+const S3 = 'https://solomath.s3.amazonaws.com';
+const DOVER = 'https://neb.dovereducation.net';
+
+const games: Game[] = [
+  // ── DOVER EDUCATION GAMES ─────────────────────────────────────────
+  { id: 'dover-index', name: 'Dover Games Hub', icon: '🌐', category: 'Hub', url: `${DOVER}`, description: 'Full Dover Education game hub', color: 'from-blue-600 to-indigo-700', source: 'dover' },
+
+  // Action / Adventure
+  { id: 'dv-slope',        name: 'Slope',            icon: '🎿', category: 'Action',    url: `${DOVER}/slope`,              description: 'Roll down endless slope!',           color: 'from-green-500 to-emerald-600',  source: 'dover' },
+  { id: 'dv-run3',         name: 'Run 3',            icon: '🏃', category: 'Action',    url: `${DOVER}/run3`,               description: 'Run through space tunnels',          color: 'from-purple-500 to-violet-600',  source: 'dover' },
+  { id: 'dv-1v1lol',       name: '1v1.LOL',          icon: '🔫', category: 'Shooter',   url: `${DOVER}/1v1lol`,             description: 'Build and battle!',                 color: 'from-red-500 to-rose-600',       source: 'dover' },
+  { id: 'dv-subway',       name: 'Subway Surfers',   icon: '🛹', category: 'Action',    url: `${DOVER}/subwaysurfers`,      description: 'Surf the rails!',                   color: 'from-yellow-500 to-amber-600',   source: 'dover' },
+  { id: 'dv-tunnel',       name: 'Tunnel Rush',      icon: '🌀', category: 'Action',    url: `${DOVER}/tunnelrush`,         description: 'Dodge in neon tunnels',             color: 'from-pink-500 to-purple-600',    source: 'dover' },
+  { id: 'dv-snowrider',    name: 'Snow Rider 3D',    icon: '⛷️', category: 'Action',    url: `${DOVER}/snowrider3d`,        description: 'Ride snowy mountains',              color: 'from-cyan-400 to-blue-500',      source: 'dover' },
+  { id: 'dv-retrobowl',    name: 'Retro Bowl',       icon: '🏈', category: 'Sports',    url: `${DOVER}/retrobowl`,          description: 'Classic football sim!',             color: 'from-amber-500 to-orange-600',   source: 'dover' },
+  { id: 'dv-drift',        name: 'Drift Hunters',    icon: '🏎️', category: 'Racing',    url: `${DOVER}/drifthunters`,       description: 'Drift on various tracks',           color: 'from-blue-500 to-cyan-600',      source: 'dover' },
+  { id: 'dv-motox3m',      name: 'Moto X3M',         icon: '🏍️', category: 'Racing',    url: `${DOVER}/motox3m`,            description: 'Extreme moto stunts',               color: 'from-red-600 to-pink-600',       source: 'dover' },
+  { id: 'dv-geometry',     name: 'Geometry Dash',    icon: '🔷', category: 'Arcade',    url: `${DOVER}/geometrydash`,       description: 'Jump to the beat!',                 color: 'from-blue-600 to-indigo-700',    source: 'dover' },
+  { id: 'dv-smashkarts',   name: 'Smash Karts',      icon: '🏎️', category: 'Racing',    url: `${DOVER}/smashkarts`,         description: 'Battle kart racing',                color: 'from-green-400 to-teal-500',     source: 'dover' },
+  { id: 'dv-paperio',      name: 'Paper.io 2',       icon: '📄', category: 'IO',        url: `${DOVER}/paperio2`,           description: 'Claim territory!',                  color: 'from-indigo-500 to-blue-600',    source: 'dover' },
+  { id: 'dv-2048',         name: '2048',             icon: '🔢', category: 'Puzzle',    url: `${DOVER}/2048`,               description: 'Merge tiles to 2048',               color: 'from-orange-400 to-amber-500',   source: 'dover' },
+  { id: 'dv-chess',        name: 'Chess',            icon: '♟️', category: 'Puzzle',    url: `${DOVER}/chess`,              description: 'Classic chess game',                color: 'from-gray-600 to-gray-800',      source: 'dover' },
+  { id: 'dv-tetris',       name: 'Tetris',           icon: '🟦', category: 'Arcade',    url: `${DOVER}/tetris`,             description: 'Classic block puzzle',              color: 'from-blue-500 to-purple-600',    source: 'dover' },
+  { id: 'dv-minecraft',    name: 'Minecraft Classic', icon: '⛏️', category: 'Sandbox',  url: `${DOVER}/minecraft`,          description: 'Build and explore!',                color: 'from-green-700 to-lime-600',     source: 'dover' },
+  { id: 'dv-shellshock',   name: 'Shell Shockers',   icon: '🥚', category: 'Shooter',   url: `${DOVER}/shellshockers`,      description: 'FPS with eggs!',                    color: 'from-yellow-400 to-orange-500',  source: 'dover' },
+  { id: 'dv-krunker',      name: 'Krunker',          icon: '🎯', category: 'Shooter',   url: `${DOVER}/krunker`,            description: 'Pixel FPS shooter',                 color: 'from-blue-600 to-blue-800',      source: 'dover' },
+  { id: 'dv-agario',       name: 'Agar.io',          icon: '⭕', category: 'IO',        url: `${DOVER}/agario`,             description: 'Eat or be eaten',                   color: 'from-teal-500 to-cyan-600',      source: 'dover' },
+  { id: 'dv-slither',      name: 'Slither.io',       icon: '🐍', category: 'IO',        url: `${DOVER}/slither`,            description: 'Grow your snake!',                  color: 'from-green-500 to-lime-500',     source: 'dover' },
+  { id: 'dv-vex3',         name: 'Vex 3',            icon: '🏃', category: 'Platformer', url: `${DOVER}/vex3`,              description: 'Hardcore platformer!',              color: 'from-teal-600 to-teal-800',      source: 'dover' },
+  { id: 'dv-vex4',         name: 'Vex 4',            icon: '🏃', category: 'Platformer', url: `${DOVER}/vex4`,              description: 'Even harder!',                      color: 'from-cyan-600 to-cyan-800',      source: 'dover' },
+  { id: 'dv-vex5',         name: 'Vex 5',            icon: '🏃', category: 'Platformer', url: `${DOVER}/vex5`,              description: 'Ultimate Vex!',                     color: 'from-blue-600 to-blue-800',      source: 'dover' },
+  { id: 'dv-happywheels',  name: 'Happy Wheels',     icon: '🛞', category: 'Platformer', url: `${DOVER}/happywheels`,       description: 'Ragdoll physics!',                  color: 'from-red-600 to-orange-600',     source: 'dover' },
+  { id: 'dv-fireboy',      name: 'Fireboy & Watergirl', icon: '🔥', category: 'Platformer', url: `${DOVER}/fireboyandwatergirl`, description: 'Co-op temple!',             color: 'from-orange-500 to-blue-500',    source: 'dover' },
+  { id: 'dv-btd',          name: 'Bloons TD',        icon: '🎈', category: 'Strategy',  url: `${DOVER}/bloons`,             description: 'Pop the bloons!',                   color: 'from-red-400 to-red-600',        source: 'dover' },
+  { id: 'dv-kingdomrush',  name: 'Kingdom Rush',     icon: '🏰', category: 'Strategy',  url: `${DOVER}/kingdomrush`,        description: 'Tower defense classic!',            color: 'from-amber-600 to-red-600',      source: 'dover' },
+  { id: 'dv-crossy',       name: 'Crossy Road',      icon: '🐔', category: 'Action',    url: `${DOVER}/crossyroad`,         description: 'Cross without getting hit!',        color: 'from-lime-500 to-green-600',     source: 'dover' },
+  { id: 'dv-doodlejump',   name: 'Doodle Jump',      icon: '📝', category: 'Arcade',    url: `${DOVER}/doodlejump`,         description: 'Jump as high as you can!',          color: 'from-lime-400 to-green-500',     source: 'dover' },
+  { id: 'dv-flappy',       name: 'Flappy Bird',      icon: '🐦', category: 'Arcade',    url: `${DOVER}/flappybird`,         description: 'Tap to fly through pipes',          color: 'from-green-400 to-cyan-500',     source: 'dover' },
+  { id: 'dv-pacman',       name: 'Pac-Man',          icon: '🟡', category: 'Arcade',    url: `${DOVER}/pacman`,             description: 'Classic arcade game',               color: 'from-yellow-400 to-yellow-600',  source: 'dover' },
+  { id: 'dv-snake',        name: 'Snake',            icon: '🐍', category: 'Arcade',    url: `${DOVER}/snake`,              description: 'Classic snake!',                    color: 'from-green-600 to-green-800',    source: 'dover' },
+  { id: 'dv-fnaf',         name: 'FNAF',             icon: '🐻', category: 'Horror',    url: `${DOVER}/fnaf`,               description: 'Five Nights at Freddy\'s',          color: 'from-gray-800 to-gray-950',      source: 'dover' },
+  { id: 'dv-wordle',       name: 'Wordle',           icon: '📝', category: 'Puzzle',    url: `${DOVER}/wordle`,             description: 'Guess the word in 6 tries',         color: 'from-green-600 to-emerald-700',  source: 'dover' },
+  { id: 'dv-sudoku',       name: 'Sudoku',           icon: '🔢', category: 'Puzzle',    url: `${DOVER}/sudoku`,             description: 'Number puzzle',                     color: 'from-blue-400 to-blue-600',      source: 'dover' },
+  { id: 'dv-basketrandom', name: 'Basket Random',    icon: '🏀', category: 'Sports',    url: `${DOVER}/basketrandom`,       description: 'Wacky basketball!',                 color: 'from-orange-500 to-red-600',     source: 'dover' },
+  { id: 'dv-getaway',      name: 'Getaway Shootout', icon: '💨', category: 'Action',    url: `${DOVER}/getawayshootout`,    description: 'Race to escape!',                   color: 'from-purple-500 to-pink-500',    source: 'dover' },
+  { id: 'dv-rooftop',      name: 'Rooftop Snipers',  icon: '🎯', category: 'Action',    url: `${DOVER}/rooftopsnipers`,     description: 'Snipe from rooftops!',              color: 'from-blue-700 to-gray-800',      source: 'dover' },
+  { id: 'dv-tanktrouble',  name: 'Tank Trouble',     icon: '🪖', category: 'Action',    url: `${DOVER}/tanktrouble`,        description: 'Tank battle maze!',                 color: 'from-green-600 to-green-800',    source: 'dover' },
+  { id: 'dv-electricman',  name: 'Electric Man',     icon: '⚡', category: 'Fighting',  url: `${DOVER}/electricman`,        description: 'Stick figure fighter!',             color: 'from-blue-500 to-cyan-500',      source: 'dover' },
+  { id: 'dv-bob',          name: 'Bob The Robber',   icon: '🦹', category: 'Platformer', url: `${DOVER}/bobtherobber`,      description: 'Stealth robbery!',                  color: 'from-indigo-600 to-indigo-800',  source: 'dover' },
+  { id: 'dv-among',        name: 'Among Us',         icon: '🧑‍🚀', category: 'Social', url: `${DOVER}/amongus`,            description: 'Find the impostor!',                color: 'from-red-500 to-red-700',        source: 'dover' },
+  { id: 'dv-idle',         name: 'Clicker Heroes',   icon: '⚔️', category: 'Idle',      url: `${DOVER}/clickerheroes`,      description: 'Click to defeat monsters!',         color: 'from-red-500 to-purple-600',     source: 'dover' },
+  { id: 'dv-papaspizza',   name: "Papa's Pizzeria",  icon: '🍕', category: 'Simulation', url: `${DOVER}/papaspizzeria`,     description: 'Run a pizza shop!',                 color: 'from-red-500 to-yellow-500',     source: 'dover' },
+  { id: 'dv-eagler',       name: 'Eaglercraft',      icon: '🦅', category: 'Sandbox',   url: `${DOVER}/eaglercraft`,        description: 'Minecraft 1.8 in browser!',         color: 'from-emerald-600 to-green-700',  source: 'dover' },
+
+  // ── S3 BUCKET GAMES ───────────────────────────────────────────────
+  { id: 's3-hub',          name: 'S3 Game Hub',      icon: '🎮', category: 'Hub',       url: `${S3}/index.html`,            description: 'Browse all S3 hosted games',        color: 'from-purple-600 to-pink-600',    source: 's3' },
+  { id: 's3-vault',        name: 'Game Vault',       icon: '🔐', category: 'Hub',       url: `${S3}/vault.html`,            description: 'Secret vault with extra games',     color: 'from-yellow-500 to-orange-600',  source: 's3' },
+  { id: 's3-slope',        name: 'Slope (S3)',       icon: '🎿', category: 'Action',    url: `${S3}/slope/index.html`,      description: 'S3 hosted Slope',                   color: 'from-green-500 to-emerald-600',  source: 's3' },
+  { id: 's3-run3',         name: 'Run 3 (S3)',       icon: '🏃', category: 'Action',    url: `${S3}/run3/index.html`,       description: 'S3 hosted Run 3',                   color: 'from-purple-500 to-violet-600',  source: 's3' },
+  { id: 's3-1v1',          name: '1v1.LOL (S3)',     icon: '🔫', category: 'Shooter',   url: `${S3}/1v1lol/index.html`,     description: 'S3 hosted 1v1.LOL',                 color: 'from-red-500 to-rose-600',       source: 's3' },
+  { id: 's3-subway',       name: 'Subway Surfers (S3)', icon: '🛹', category: 'Action', url: `${S3}/subwaysurfers/index.html`, description: 'S3 hosted Subway Surfers',       color: 'from-yellow-500 to-amber-600',   source: 's3' },
+  { id: 's3-retrobowl',    name: 'Retro Bowl (S3)',  icon: '🏈', category: 'Sports',    url: `${S3}/retrobowl/index.html`,  description: 'S3 hosted Retro Bowl',              color: 'from-amber-500 to-orange-600',   source: 's3' },
+  { id: 's3-minecraft',    name: 'Minecraft (S3)',   icon: '⛏️', category: 'Sandbox',   url: `${S3}/minecraft/index.html`,  description: 'S3 hosted Minecraft Classic',       color: 'from-green-700 to-lime-600',     source: 's3' },
+  { id: 's3-drift',        name: 'Drift Hunters (S3)', icon: '🏎️', category: 'Racing', url: `${S3}/drifthunters/index.html`, description: 'S3 hosted Drift Hunters',         color: 'from-blue-500 to-cyan-600',      source: 's3' },
+  { id: 's3-geometry',     name: 'Geometry Dash (S3)', icon: '🔷', category: 'Arcade', url: `${S3}/geometrydash/index.html`, description: 'S3 hosted Geometry Dash',         color: 'from-blue-600 to-indigo-700',    source: 's3' },
+  { id: 's3-2048',         name: '2048 (S3)',        icon: '🔢', category: 'Puzzle',    url: `${S3}/2048/index.html`,       description: 'S3 hosted 2048',                    color: 'from-orange-400 to-amber-500',   source: 's3' },
+  { id: 's3-smashkarts',   name: 'Smash Karts (S3)', icon: '🏎️', category: 'Racing',   url: `${S3}/smashkarts/index.html`, description: 'S3 hosted Smash Karts',             color: 'from-green-400 to-teal-500',     source: 's3' },
+  { id: 's3-shell',        name: 'Shell Shockers (S3)', icon: '🥚', category: 'Shooter', url: `${S3}/shellshockers/index.html`, description: 'S3 hosted Shell Shockers',     color: 'from-yellow-400 to-orange-500',  source: 's3' },
+  { id: 's3-krunker',      name: 'Krunker (S3)',     icon: '🎯', category: 'Shooter',   url: `${S3}/krunker/index.html`,    description: 'S3 hosted Krunker',                 color: 'from-blue-600 to-blue-800',      source: 's3' },
+  { id: 's3-vex3',         name: 'Vex 3 (S3)',       icon: '🏃', category: 'Platformer', url: `${S3}/vex3/index.html`,      description: 'S3 hosted Vex 3',                   color: 'from-teal-600 to-teal-800',      source: 's3' },
+  { id: 's3-vex5',         name: 'Vex 5 (S3)',       icon: '🏃', category: 'Platformer', url: `${S3}/vex5/index.html`,      description: 'S3 hosted Vex 5',                   color: 'from-blue-600 to-blue-800',      source: 's3' },
+  { id: 's3-btd',          name: 'Bloons TD (S3)',   icon: '🎈', category: 'Strategy',  url: `${S3}/bloons/index.html`,     description: 'S3 hosted Bloons TD',               color: 'from-red-400 to-red-600',        source: 's3' },
+  { id: 's3-happywheels',  name: 'Happy Wheels (S3)', icon: '🛞', category: 'Platformer', url: `${S3}/happywheels/index.html`, description: 'S3 hosted Happy Wheels',          color: 'from-red-600 to-orange-600',     source: 's3' },
+  { id: 's3-paperio',      name: 'Paper.io 2 (S3)', icon: '📄', category: 'IO',         url: `${S3}/paperio2/index.html`,   description: 'S3 hosted Paper.io 2',              color: 'from-indigo-500 to-blue-600',    source: 's3' },
+  { id: 's3-agario',       name: 'Agar.io (S3)',     icon: '⭕', category: 'IO',         url: `${S3}/agario/index.html`,     description: 'S3 hosted Agar.io',                 color: 'from-teal-500 to-cyan-600',      source: 's3' },
+  { id: 's3-fnaf',         name: 'FNAF (S3)',        icon: '🐻', category: 'Horror',    url: `${S3}/fnaf/index.html`,       description: 'S3 hosted FNAF',                    color: 'from-gray-800 to-gray-950',      source: 's3' },
+  { id: 's3-tunnelrush',   name: 'Tunnel Rush (S3)', icon: '🌀', category: 'Action',    url: `${S3}/tunnelrush/index.html`, description: 'S3 hosted Tunnel Rush',             color: 'from-pink-500 to-purple-600',    source: 's3' },
+  { id: 's3-snowrider',    name: 'Snow Rider (S3)',  icon: '⛷️', category: 'Action',    url: `${S3}/snowrider3d/index.html`, description: 'S3 hosted Snow Rider 3D',          color: 'from-cyan-400 to-blue-500',      source: 's3' },
+  { id: 's3-among',        name: 'Among Us (S3)',    icon: '🧑‍🚀', category: 'Social', url: `${S3}/amongus/index.html`,    description: 'S3 hosted Among Us',                color: 'from-red-500 to-red-700',        source: 's3' },
+  { id: 's3-eagler',       name: 'Eaglercraft (S3)', icon: '🦅', category: 'Sandbox',   url: `${S3}/eaglercraft/index.html`, description: 'S3 Minecraft 1.8',                 color: 'from-emerald-600 to-green-700',  source: 's3' },
+  { id: 's3-papaspizza',   name: "Papa's Pizzeria (S3)", icon: '🍕', category: 'Simulation', url: `${S3}/papaspizzeria/index.html`, description: 'S3 hosted Papa\'s Pizzeria', color: 'from-red-500 to-yellow-500',   source: 's3' },
+  { id: 's3-dino',         name: 'Chrome Dino (S3)', icon: '🦕', category: 'Arcade',    url: `${S3}/dinogame/index.html`,   description: 'The classic dino game',             color: 'from-gray-500 to-gray-700',      source: 's3' },
+  { id: 's3-getaway',      name: 'Getaway Shootout (S3)', icon: '💨', category: 'Action', url: `${S3}/getawayshootout/index.html`, description: 'S3 Getaway Shootout',        color: 'from-purple-500 to-pink-500',    source: 's3' },
+
+  // ── OFFICIAL / EXTERNAL URLs ─────────────────────────────────────
+  { id: 'cookieclicker',   name: 'Cookie Clicker',   icon: '🍪', category: 'Idle',      url: 'https://orteil.dashnet.org/cookieclicker/', description: 'Click cookies, build an empire!', color: 'from-amber-400 to-yellow-500', source: 'official' },
+];
+
+const SOURCE_LABELS: Record<string, { label: string; color: string }> = {
+  dover:    { label: 'Dover',    color: 'bg-blue-900/60 text-blue-300' },
+  s3:       { label: 'S3',       color: 'bg-purple-900/60 text-purple-300' },
+  official: { label: 'Official', color: 'bg-green-900/60 text-green-300' },
+  external: { label: 'Web',      color: 'bg-gray-800 text-gray-400' },
+};
+
+const allCategories = ['All', 'Dover', 'S3', ...Array.from(new Set(
+  games.filter(g => g.category !== 'Hub').map(g => g.category)
+)).sort()];
+
+export function GamePortal({ username, isAdmin, onLogout, onAdminPanel }: GamePortalProps) {
+  const [activeGame, setActiveGame] = useState<Game | null>(null);
+  const [search, setSearch] = useState('');
+  const [category, setCategory] = useState('All');
+  const [sourceFilter, setSourceFilter] = useState<'all' | 'dover' | 's3' | 'official'>('all');
+  const [showFavsOnly, setShowFavsOnly] = useState(false);
+  const [iframeError, setIframeError] = useState(false);
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    try { return JSON.parse(localStorage.getItem('tmh_favs') || '[]'); }
+    catch { return []; }
+  });
+
+  useEffect(() => { setIframeError(false); }, [activeGame]);
+
+  const toggleFav = (id: string) => {
+    setFavorites(prev => {
+      const next = prev.includes(id) ? prev.filter(f => f !== id) : [...prev, id];
+      localStorage.setItem('tmh_favs', JSON.stringify(next));
+      return next;
+    });
+  };
+
+  const filtered = games.filter(g => {
+    if (g.category === 'Hub') return false; // Hub shown separately
+    const matchSearch = g.name.toLowerCase().includes(search.toLowerCase()) ||
+      g.category.toLowerCase().includes(search.toLowerCase()) ||
+      g.description.toLowerCase().includes(search.toLowerCase());
+    const matchCat = category === 'All' || category === g.category ||
+      (category === 'Dover' && g.source === 'dover') ||
+      (category === 'S3' && g.source === 's3');
+    const matchSrc = sourceFilter === 'all' || g.source === sourceFilter;
+    const matchFav = !showFavsOnly || favorites.includes(g.id);
+    return matchSearch && matchCat && matchSrc && matchFav;
+  });
+
+  const favGames = games.filter(g => favorites.includes(g.id));
+  const doverCount = games.filter(g => g.source === 'dover' && g.category !== 'Hub').length;
+  const s3Count = games.filter(g => g.source === 's3' && g.category !== 'Hub').length;
+
+  // ── PLAYING A GAME ───────────────────────────────────────────────
+  if (activeGame) {
+    return (
+      <div className="fixed inset-0 bg-black z-50 flex flex-col">
+        <div className="bg-gray-900 px-3 py-2 flex items-center justify-between border-b border-gray-800 shrink-0 gap-2">
+          <div className="flex items-center gap-2 min-w-0">
+            <button
+              onClick={() => setActiveGame(null)}
+              className="px-3 py-1.5 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm font-medium shrink-0"
+            >
+              ← Back
+            </button>
+            <span className="text-xl shrink-0">{activeGame.icon}</span>
+            <span className="text-white font-semibold hidden sm:inline truncate">{activeGame.name}</span>
+            {activeGame.source && (
+              <span className={`px-1.5 py-0.5 rounded text-[10px] font-bold shrink-0 hidden sm:inline ${SOURCE_LABELS[activeGame.source]?.color}`}>
+                {SOURCE_LABELS[activeGame.source]?.label}
+              </span>
+            )}
+          </div>
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              onClick={() => toggleFav(activeGame.id)}
+              className="p-2 hover:bg-gray-800 rounded-lg transition-colors text-lg"
+              title="Favorite"
+            >
+              {favorites.includes(activeGame.id) ? '⭐' : '☆'}
+            </button>
+            <a
+              href={activeGame.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-2 py-1.5 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-xs hidden sm:inline-flex items-center gap-1"
+            >
+              ↗ New Tab
+            </a>
+            <button
+              onClick={() => {
+                const el = document.getElementById('game-frame') as HTMLIFrameElement;
+                el?.requestFullscreen?.();
+              }}
+              className="px-2 py-1.5 bg-gray-800 text-gray-300 rounded-lg hover:bg-gray-700 transition-colors text-xs"
+            >
+              ⛶ Full
+            </button>
+            <button
+              onClick={onLogout}
+              className="px-3 py-1.5 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-bold"
+              title="PANIC - Quick Exit!"
+            >
+              🚨
+            </button>
+          </div>
+        </div>
+
+        {iframeError ? (
+          <div className="flex-1 flex items-center justify-center bg-gray-950">
+            <div className="text-center p-8 max-w-md">
+              <div className="text-6xl mb-4">⚠️</div>
+              <h3 className="text-xl font-bold text-white mb-2">Can't Load in Frame</h3>
+              <p className="text-gray-400 mb-2 text-sm">
+                This game blocks iframe embedding. Open it directly in a new tab.
+              </p>
+              <p className="text-gray-600 text-xs mb-6 font-mono break-all">{activeGame.url}</p>
+              <div className="flex gap-3 justify-center flex-wrap">
+                <a
+                  href={activeGame.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-3 bg-purple-600 text-white rounded-xl font-semibold hover:bg-purple-700 transition-colors"
+                >
+                  Open in New Tab ↗
+                </a>
+                <button
+                  onClick={() => setActiveGame(null)}
+                  className="px-6 py-3 bg-gray-800 text-white rounded-xl font-semibold hover:bg-gray-700 transition-colors"
+                >
+                  Back to Games
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <iframe
+            id="game-frame"
+            src={activeGame.url}
+            className="flex-1 w-full border-0"
+            allow="fullscreen; autoplay; gamepad; accelerometer; gyroscope; microphone; camera"
+            sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals allow-popups-to-escape-sandbox allow-downloads"
+            referrerPolicy="no-referrer"
+            onError={() => setIframeError(true)}
+            title={activeGame.name}
+          />
+        )}
+      </div>
+    );
+  }
+
+  // ── GAME LIST ────────────────────────────────────────────────────
+  return (
+    <div className="min-h-screen bg-gray-950 text-white">
+      {/* Header */}
+      <header className="bg-gray-900 border-b border-gray-800 sticky top-0 z-40">
+        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-pink-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shrink-0">
+              🎮
+            </div>
+            <div className="min-w-0">
+              <h1 className="text-base font-bold">Game Portal</h1>
+              <p className="text-xs text-gray-500 truncate">
+                {username} · {doverCount} Dover · {s3Count} S3 · {games.length - 2} total
+              </p>
+            </div>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            {isAdmin && (
+              <button
+                onClick={onAdminPanel}
+                className="px-3 py-2 bg-yellow-600/20 text-yellow-400 rounded-lg text-sm font-medium hover:bg-yellow-600/30 transition-colors border border-yellow-600/30"
+              >
+                ⚙️ Admin
+              </button>
+            )}
+            <button
+              onClick={onLogout}
+              className="px-3 py-2 bg-gray-800 text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-700 transition-colors"
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="max-w-7xl mx-auto px-4 py-5">
+
+        {/* ── Hub Quick Access ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-6">
+          {/* Dover Hub */}
+          <button
+            onClick={() => setActiveGame(games.find(g => g.id === 'dover-index')!)}
+            className="bg-gradient-to-r from-blue-600/25 to-indigo-600/25 border border-blue-500/30 rounded-xl p-4 text-left hover:border-blue-400/60 hover:from-blue-600/35 hover:to-indigo-600/35 transition-all group"
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-3xl group-hover:scale-110 transition-transform">🌐</span>
+              <div>
+                <p className="font-bold text-sm text-blue-300">Dover Education Hub</p>
+                <p className="text-xs text-gray-400">{doverCount}+ games · neb.dovereducation.net</p>
+              </div>
+            </div>
+          </button>
+
+          {/* S3 Hub */}
+          <button
+            onClick={() => setActiveGame(games.find(g => g.id === 's3-hub')!)}
+            className="bg-gradient-to-r from-purple-600/25 to-pink-600/25 border border-purple-500/30 rounded-xl p-4 text-left hover:border-purple-400/60 hover:from-purple-600/35 hover:to-pink-600/35 transition-all group"
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-3xl group-hover:scale-110 transition-transform">🎮</span>
+              <div>
+                <p className="font-bold text-sm text-purple-300">S3 Game Index</p>
+                <p className="text-xs text-gray-400">{s3Count}+ games · solomath.s3.amazonaws.com</p>
+              </div>
+            </div>
+          </button>
+
+          {/* S3 Vault */}
+          <button
+            onClick={() => setActiveGame(games.find(g => g.id === 's3-vault')!)}
+            className="bg-gradient-to-r from-yellow-600/25 to-orange-600/25 border border-yellow-500/30 rounded-xl p-4 text-left hover:border-yellow-400/60 hover:from-yellow-600/35 hover:to-orange-600/35 transition-all group"
+          >
+            <div className="flex items-center gap-3">
+              <span className="text-3xl group-hover:scale-110 transition-transform">🔐</span>
+              <div>
+                <p className="font-bold text-sm text-yellow-300">Game Vault (S3)</p>
+                <p className="text-xs text-gray-400">Extra games · vault.html</p>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        {/* ── Search & Controls ── */}
+        <div className="flex flex-col gap-3 mb-5">
+          <div className="flex gap-2">
+            <div className="flex-1 relative">
+              <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+              <input
+                type="text"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                placeholder="Search games..."
+                className="w-full pl-9 pr-4 py-2.5 bg-gray-900 border border-gray-800 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-colors text-sm"
+              />
+            </div>
+            <button
+              onClick={() => setShowFavsOnly(v => !v)}
+              className={`px-3 py-2.5 rounded-xl text-sm font-medium transition-colors flex items-center gap-1.5 shrink-0 ${
+                showFavsOnly
+                  ? 'bg-yellow-600/20 text-yellow-400 border border-yellow-600/30'
+                  : 'bg-gray-900 text-gray-400 border border-gray-800 hover:bg-gray-800'
+              }`}
+            >
+              ⭐ {favGames.length > 0 ? `(${favGames.length})` : 'Favs'}
+            </button>
+          </div>
+
+          {/* Source filter pills */}
+          <div className="flex gap-2 flex-wrap">
+            {(['all', 'dover', 's3', 'official'] as const).map(s => (
+              <button
+                key={s}
+                onClick={() => setSourceFilter(s)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
+                  sourceFilter === s
+                    ? s === 'dover' ? 'bg-blue-600 text-white'
+                      : s === 's3' ? 'bg-purple-600 text-white'
+                      : s === 'official' ? 'bg-green-600 text-white'
+                      : 'bg-white text-gray-900'
+                    : 'bg-gray-900 text-gray-400 border border-gray-800 hover:bg-gray-800'
+                }`}
+              >
+                {s === 'all' ? '🌐 All Sources'
+                  : s === 'dover' ? '🔵 Dover'
+                  : s === 's3' ? '🟣 S3 Bucket'
+                  : '🟢 Official'}
+              </button>
+            ))}
+          </div>
+
+          {/* Category pills */}
+          <div className="flex gap-1.5 flex-wrap">
+            {allCategories.map(c => (
+              <button
+                key={c}
+                onClick={() => setCategory(c)}
+                className={`px-2.5 py-1 rounded-lg text-xs font-medium transition-colors ${
+                  category === c
+                    ? 'bg-purple-600 text-white'
+                    : 'bg-gray-900 text-gray-500 hover:bg-gray-800 hover:text-gray-300 border border-gray-800'
+                }`}
+              >
+                {c}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* ── Favorites Row ── */}
+        {favGames.length > 0 && !showFavsOnly && (
+          <div className="mb-6">
+            <h2 className="text-sm font-bold mb-2 text-gray-400 uppercase tracking-wide">⭐ Favorites</h2>
+            <div className="flex gap-2 overflow-x-auto pb-1">
+              {favGames.map(game => (
+                <button
+                  key={game.id}
+                  onClick={() => setActiveGame(game)}
+                  className="bg-gray-900 border border-gray-800 rounded-xl p-2.5 text-center hover:border-purple-500/50 hover:bg-gray-800/50 transition-all group shrink-0 w-20"
+                >
+                  <div className="text-2xl mb-1 group-hover:scale-110 transition-transform">{game.icon}</div>
+                  <p className="text-[10px] font-medium text-gray-300 leading-tight truncate">{game.name.replace(' (S3)', '')}</p>
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* ── Results count ── */}
+        <div className="flex items-center justify-between mb-3">
+          <h2 className="text-base font-bold text-gray-300">
+            {showFavsOnly ? '⭐ Favorites' : search ? `Results for "${search}"` : category}
+            <span className="text-gray-600 font-normal text-sm ml-2">({filtered.length} games)</span>
+          </h2>
+          {search && (
+            <button onClick={() => setSearch('')} className="text-xs text-gray-500 hover:text-gray-300 transition-colors">
+              Clear ✕
+            </button>
+          )}
+        </div>
+
+        {/* ── Game Grid ── */}
+        {filtered.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="text-5xl mb-4">🔍</div>
+            <p className="text-gray-400 text-lg mb-2">No games found.</p>
+            <p className="text-gray-600 text-sm">Try a different search or category.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2.5">
+            {filtered.map(game => (
+              <div
+                key={game.id}
+                className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-600 hover:shadow-lg hover:shadow-black/30 transition-all group cursor-pointer"
+                onClick={() => setActiveGame(game)}
+              >
+                <div className={`h-20 bg-gradient-to-br ${game.color} flex items-center justify-center relative`}>
+                  <span className="text-3xl group-hover:scale-110 transition-transform drop-shadow-lg">{game.icon}</span>
+                  <button
+                    onClick={e => { e.stopPropagation(); toggleFav(game.id); }}
+                    className="absolute top-1 right-1 w-6 h-6 bg-black/30 rounded-full flex items-center justify-center hover:bg-black/50 transition-colors text-xs"
+                  >
+                    {favorites.includes(game.id) ? '⭐' : '☆'}
+                  </button>
+                  {game.source && (
+                    <span className={`absolute bottom-1 left-1 px-1 py-0.5 rounded text-[9px] font-bold ${SOURCE_LABELS[game.source]?.color}`}>
+                      {SOURCE_LABELS[game.source]?.label}
+                    </span>
+                  )}
+                </div>
+                <div className="p-2">
+                  <h3 className="font-bold text-white text-xs mb-0.5 leading-tight line-clamp-1">{game.name.replace(' (S3)', '')}</h3>
+                  <p className="text-[10px] text-gray-500 leading-tight line-clamp-2">{game.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="mt-6 text-center">
+          <p className="text-xs text-gray-700">
+            🔵 Dover Education · 🟣 S3 Bucket · 🟢 Official URLs · Click any game to play · ↗ New Tab if iframe blocked
+          </p>
+        </div>
+      </div>
+
+      {/* Floating panic button */}
+      <div className="fixed bottom-4 right-4 z-50 flex flex-col items-center gap-1">
+        <button
+          onClick={onLogout}
+          className="w-12 h-12 bg-red-600 text-white rounded-full shadow-lg shadow-red-600/30 hover:bg-red-700 transition-all flex items-center justify-center text-xl hover:scale-110 active:scale-95"
+          title="PANIC - Quick exit to math site"
+        >
+          🚨
+        </button>
+        <span className="text-[9px] text-gray-700">Exit</span>
+      </div>
+    </div>
+  );
+}
